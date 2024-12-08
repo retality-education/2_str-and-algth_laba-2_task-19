@@ -127,7 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Binary_Tree.cpp" />
     <ClCompile Include="laba-2_task-19.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Binary_Tree.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
