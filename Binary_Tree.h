@@ -44,6 +44,13 @@ namespace btree
 		~BTREE();
 		void print(std::ostream& stream = std::cout);
 		void clear(ptrNODE& ptr);
+
+		ptrNODE remove_less_than_recursive(ptrNODE node, double threshold);
+		void calculate_sum_and_count_iterative(int& sum, int& count);
+		ptrNODE remove_less_than_iterative(ptrNODE node, double threshold);
+		void calculate_sum_and_count_recursive(ptrNODE node, int& sum, int& count);
+
+		void remove_below_average();
 	};
 
 }
