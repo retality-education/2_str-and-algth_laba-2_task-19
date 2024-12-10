@@ -27,95 +27,9 @@ void calculate_sum_and_count_iterative(ptrNODE root, int& sum, int& count) {
 }
 
 #include <vector>
-//ptrNODE remove_less_than_iterative(ptrNODE node, double threshold) {
-//    if (!node) return nullptr;
-//
-//    std::stack<ptrNODE> stack; // Стек указателей на узлы
-//    std::vector<ptrNODE> nodesToDelete; // Вектор для хранения узлов на удаление
-//    stack.push(node); // Начинаем с корня
-//
-//    while (!stack.empty()) {
-//        ptrNODE currentPtr = stack.top();
-//        stack.pop();
-//
-//        if (currentPtr) {
-//            if (currentPtr->info < threshold) {
-//                nodesToDelete.push_back(currentPtr); // Запоминаем узел на удаление
-//                currentPtr = nullptr; // Удаляем узел из дерева
-//            }
-//            else {
-//                // Добавляем правый и левый дочерние узлы в стек
-//                stack.push(currentPtr->right);
-//                stack.push(currentPtr->left);
-//            }
-//        }
-//    }
-//    for (auto x : nodesToDelete)
-//        delete x;
-//    /*while (!nodesToDelete.empty()) {
-//        delete nodesToDelete.top();
-//    }*/
-//
-//    return node; // Возвращаем обновленный корень дерева
-//}
+
 #include <queue>
-//void remove_less_than_iterative(ptrNODE& root, int threshold) {
-//    std::stack<ptrNODE> s;
-//    std::queue<ptrNODE> q;
-//    btree::BTREE btree_temp;
-//    ptrNODE ptr = root;
-//    s.push(root);
-//    while (!s.empty()) {
-//        ptrNODE temp = s.top();
-//        s.pop();
-//        q.push(temp);
-//        if (temp->left)
-//            s.push(temp->left);
-//        if (temp->right)
-//            s.push(temp->right);
-//    }
-//    root = nullptr;
-//    while (!q.empty()) {
-//        ptrNODE temp = q.front();
-//        q.pop();
-//        if (temp->info < threshold)
-//            delete temp;
-//        else {
-//            if (!root)
-//                root = temp;
-//            temp->
-//        }
-//    }
-//    root = btree_temp.get_root();
-//}
-//void remove_less_than_iterative(ptrNODE root, int avg)
-//{
-//    //Обход в глубину
-//    std::stack<ptrNODE> s;
-//    int result{};
-//    ptrNODE t = root;
-//    while (t)
-//    {
-//        
-//        if (t->left)
-//        {
-//            if (t->right)
-//                s.push(t->right);
-//            t = t->left;
-//        }
-//        else if (t->right)
-//            t = t->right;
-//        else if (s.empty())
-//            t = nullptr;
-//        else if (t->left == nullptr && t->right == nullptr && t->info < avg)
-//            delete t;
-//        else
-//        {
-//            t = s.top();
-//            s.pop();
-//        }
-//    }
-//}
+
 void remove_less_than_iterative(ptrNODE& root, int threshold) {
     if (root == nullptr) return;
 
@@ -148,7 +62,10 @@ void remove_less_than_iterative(ptrNODE& root, int threshold) {
             if (current == root) {
                 // Если корень нужно удалить
                 ptrNODE temp = root;
-                root = (root->left != nullptr) ? root->left : root->right;
+                if (root->right)
+                    root = root->right;
+                else
+                    root = nullptr;
                 delete temp; // Освобождаем память
                 current = root; // Обновляем текущий узел
             }
@@ -174,6 +91,7 @@ void remove_less_than_iterative(ptrNODE& root, int threshold) {
                 delete current; // Освобождаем память
             }
         }
+        
     }
 }
 void calculate_sum_and_count_recursive(ptrNODE node, int& sum, int& count) {
@@ -196,7 +114,7 @@ ptrNODE remove_less_than_recursive(ptrNODE node, double threshold) {
             node = node->right;
             ptrNODE leftMost = node;
             while (leftMost->left) {
-                leftMost = leftMost->left;
+                leftMost = leftMost->left;      
             }
             leftMost->left = temp->left;
         }
