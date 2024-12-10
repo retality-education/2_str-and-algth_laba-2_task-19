@@ -12,26 +12,42 @@ void calculate_sum_and_count(ptrNODE node, int& sum, int& count) {
     }
 }
 
-void remove_less_than_iterative(btree::BTREE& btree, ptrNODE& root, int avg) {
-    if (root == nullptr) return;
-
-    std::stack<ptrNODE> stack1;
-    stack1.push(root);
-    while (!stack1.empty()) {
-        ptrNODE node = stack1.top();
-        stack1.pop();
-        if (node->info < avg) {
-            ptrNODE temp = node;
-            if (node->right)
-                stack1.push(node->right);
-            temp->right = nullptr;
-            btree.clear(temp);
+void remove_less_than_iterative(btree::BTREE& btree, ptrNODE root, double avg) {
+    
+    if (!btree.empty()) {
+        std::stack<ptrNODE> stack1;
+        stack1.push(root);
+        ptrNODE temp1 = root;
+        while (!stack1.empty()) {
+            ptrNODE node = stack1.top();
+            stack1.pop();
+            if (node == root && node->info < avg)
+            {
+                ptrNODE temp = node->right;
+                node->right = nullptr;
+                btree.clear(node);
+                btree.set_root(temp);
+                root = btree.get_root();
+                if (temp)
+                    stack1.push(temp);
+            }
+            else if (node->info < avg) {
+                ptrNODE temp = node->right;
+                node->right = nullptr;
+                btree.clear(temp1->left);
+                temp1->left = temp;
+                if (temp)
+                    stack1.push(temp);
+            }
+            else
+                if (node->left)
+                {
+                    if (node != temp1)
+                        temp1 = node;
+                    stack1.push(node->left);
+                }
         }
-        else
-            if (node->left)
-                stack1.push(node->left);
     }
-
 }
 
 void remove_less_than_recursive(btree::BTREE& btree, ptrNODE& node, double avg) {
@@ -65,10 +81,12 @@ int main() {
     if (count != 0) {
         double avg_sum = static_cast<double>(sum) / count; // Вычисляем среднее арифметическое
 
-        //remove_less_than_recursive(tree, root, avg_sum); // Рекурсивный вариант
+        // remove_less_than_recursive(tree, root, avg_sum); // Рекурсивный вариант
+        // tree.set_root(root);
+        
         remove_less_than_iterative(tree, root, avg_sum); // Нерекурсивный вариант
     }
-    tree.set_root(root);
+    
 
     std::cout << "Дерево после удаления:" << std::endl;
     tree.print();
