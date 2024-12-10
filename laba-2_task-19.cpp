@@ -102,43 +102,35 @@ void calculate_sum_and_count_recursive(ptrNODE node, int& sum, int& count) {
         calculate_sum_and_count_recursive(node->right, sum, count);
     }
 }
-ptrNODE remove_less_than_recursive(ptrNODE node, double threshold) {
-    if (!node) return nullptr;
+void remove_less_than_recursive(btree::BTREE& btree, ptrNODE& node, double avg) {
+    if (!node) return;
 
-    node->left = remove_less_than_recursive(node->left, threshold);
-    node->right = remove_less_than_recursive(node->right, threshold);
-
-    if (node->info < threshold) {
+    if (node->info < avg)
+    {
         ptrNODE temp = node;
-        if (node->right) {
-            node = node->right;
-            ptrNODE leftMost = node;
-            while (leftMost->left) {
-                leftMost = leftMost->left;      
-            }
-            leftMost->left = temp->left;
-        }
-        else {
-            node = node->left;
-        }
+        node = node->right;
+        btree.clear(temp->left);
+        temp->left = nullptr;
+        temp->right = nullptr;
         delete temp;
+        remove_less_than_recursive(btree, node, avg);
     }
-    return node;
+    else
+        remove_less_than_recursive(btree, node->left, avg);
 }
-ptrNODE remove_below_average(ptrNODE& root) {
+void remove_below_average(btree::BTREE& tree, ptrNODE& root) {
     int sum = 0;
     int count = 0;
     
-    //calculate_sum_and_count_recursive(root, sum, count);
-    calculate_sum_and_count_iterative(root, sum, count);
+    calculate_sum_and_count_recursive(root, sum, count);
+    //calculate_sum_and_count_iterative(root, sum, count);
 
-    if (count == 0) return nullptr; // Если дерево пустое
+    if (count == 0) return; // Если дерево пустое
 
     double avg_sum = static_cast<double>(sum) / count; // Вычисляем среднее арифметическое
 
-    //root = remove_less_than_recursive(root, avg_sum); // Рекурсивный вариант
-    remove_less_than_iterative(root, avg_sum); // Нерекурсивный вариант
-    return root;
+    remove_less_than_recursive(tree, root, avg_sum); // Рекурсивный вариант
+    //remove_less_than_iterative(root, avg_sum); // Нерекурсивный вариант
 }
 int main() {
     btree::BTREE tree("test.txt"); // Предполагается, что данные находятся в файле data.txt
@@ -146,7 +138,7 @@ int main() {
     std::cout << "Дерево до удаления:" << std::endl;
     tree.print();
     ptrNODE root = (tree.get_root());
-    tree.set_root(remove_below_average(root)); // Удаляем элементы ниже среднего арифметического
+    remove_below_average(tree, root); // Удаляем элементы ниже среднего арифметического
 
     std::cout << "Дерево после удаления:" << std::endl;
     tree.print();
