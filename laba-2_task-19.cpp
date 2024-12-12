@@ -13,24 +13,24 @@ void calculate_sum_and_count(ptrNODE node, int& sum, int& count) {
     }
 }
 
-void remove_less_than_iterative(btree::BTREE& btree, ptrNODE root, double avg) {
+void remove_less_than_iterative(btree::BTREE& btree, double avg) {
     
     if (!btree.empty()) {
-        std::stack<ptrNODE> stack1;
-        stack1.push(root);
-        ptrNODE temp1 = root;
-        while (!stack1.empty()) {
-            ptrNODE node = stack1.top();
-            stack1.pop();
-            if (node == root && node->info < avg)
+        bool fg = false;
+        ptrNODE temp1 = btree.get_root();
+        ptrNODE node = btree.get_root();
+        while (!fg) {
+            if (node == btree.get_root() && node->info < avg)
             {
                 ptrNODE temp = node->right;
                 node->right = nullptr;
                 btree.clear(node);
                 btree.set_root(temp);
-                root = btree.get_root();
+       
                 if (temp)
-                    stack1.push(temp);
+                    node = temp;
+                else
+                    fg = true;
             }
             else if (node->info < avg) {
                 ptrNODE temp = node->right;
@@ -38,15 +38,19 @@ void remove_less_than_iterative(btree::BTREE& btree, ptrNODE root, double avg) {
                 btree.clear(temp1->left);
                 temp1->left = temp;
                 if (temp)
-                    stack1.push(temp);
+                    node = temp;
+                else
+                    fg = true;
             }
             else
                 if (node->left)
                 {
                     if (node != temp1)
                         temp1 = node;
-                    stack1.push(node->left);
+                    node = node->left;
                 }
+                else
+                    fg = true;
         }
     }
 }
@@ -86,7 +90,7 @@ int main() {
         // remove_less_than_recursive(tree, root, avg_sum); // Рекурсивный вариант
         // tree.set_root(root);
         
-        remove_less_than_iterative(tree, root, avg_sum); // Нерекурсивный вариант
+        remove_less_than_iterative(tree, avg_sum); // Нерекурсивный вариант
     }
     
 
