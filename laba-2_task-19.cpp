@@ -1,5 +1,6 @@
 
 #include "Binary_Tree.h"
+#include <Windows.h>
 #include <stack>
 using btree::ptrNODE;
 
@@ -66,6 +67,7 @@ void remove_less_than_recursive(btree::BTREE& btree, ptrNODE& node, double avg) 
 }
 
 int main() {
+    SetConsoleOutputCP(1251);
     btree::BTREE tree("test.txt"); // Предполагается, что данные находятся в файле data.txt
 
     std::cout << "Дерево до удаления:" << std::endl;
